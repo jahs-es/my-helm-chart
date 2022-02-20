@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  name: {{ .Values.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ index .Values.application.replicas .Values.namespace }}
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: {{ .Values.name }}
+  minReadySeconds: 20
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: {{ .Values.name }}
+    spec:
+      containers:
+      - image:  "{{ .Values.application.image }}:{{ index .Values.application.tag .Values.namespace }}"
+        name: {{ .Values.name }}
+        readinessProbe:
+          exec:
+           command:
+            {{- range .Values.application.commandtoCheck.readinessProbe }}
+            - {{ .  }}
+            {{- end }}
+          initialDelaySeconds: {{ index .Values.application.initialDelaySeconds.readinessProbe }}
+          periodSeconds: {{ index .Values.application.periodSeconds.readinessProbe }}
+        livenessProbe:
+          exec:
+            command:
+            {{- range .Values.application.commandtoCheck.livenessProbe }}
+             - {{ . }}
+            {{- end }}
+          initialDelaySeconds: {{ index .Values.application.initialDelaySeconds.livenessProbe }}
+          periodSeconds: {{ index .Values.application.periodSeconds.livenessProbe }}
+        resources:
+          limits:
+            memory: {{ index .Values.application.MemoryLimit .Values.namespace}}
+          requests:
+            memory: {{ index .Values.application.MemoryRequest .Values.namespace}}
+        env:
+        - name: NODE_ENV
+          value: {{ index .Values.application.NodeEnv .Values.namespace |quote }}
+        - name: RESTART_TRICK
+          value: {{ index .Values.application.RestartDeployment .Values.namespace |quote }}
+      restartPolicy: Always
+status: {}

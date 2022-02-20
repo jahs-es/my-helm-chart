@@ -1,0 +1,12 @@
+apiVersion: v1
+entries:
+  sales-events:
+  - apiVersion: v1
+    created: "2022-02-27T13:27:23.11873+01:00"
+    description: A Helm chart for sales events
+    digest: e841ab8955613008c8ee35ba2d422474b1b8a8a392071f82925758b32a485e4c
+    name: sales-events
+    urls:
+    - https://jahs-es.github.io/my-helm-chart/sales-events-0.1.0.tgz
+    version: 0.1.0
+generated: "2022-02-27T13:27:23.116592+01:00"

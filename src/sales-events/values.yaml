@@ -1,0 +1,40 @@
+namespace: "preproduction"
+env: "preproduction"
+name: "sales-events"
+
+application:
+      replicas:
+            production: "2"
+            preproduction: "2"
+      image: "jahs/sales-events"
+      tag:
+            production: ""
+            preproduction: ""
+      NodeEnv:
+            production: "production"
+            preproduction: "qa"
+      MemoryLimit:
+            production: "256Mi"
+            preproduction: "256Mi"
+      MemoryRequest:
+            production: "128Mi"
+            preproduction: "128Mi"
+      RestartDeployment:
+            production: "1"
+            preproduction: "1"
+      restartPolicy: "Always"
+      initialDelaySeconds:
+            readinessProbe: 15
+            livenessProbe: 30
+      periodSeconds:
+            readinessProbe: 2
+            livenessProbe: 5
+      commandtoCheck:
+            readinessProbe:
+                  - /bin/bash
+                  - /usr/src/healthy.sh
+            livenessProbe:
+                  - /bin/bash
+                  - /usr/src/healthy.sh
+service:
+      nameService: "sales-events"

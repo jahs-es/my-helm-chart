@@ -1,0 +1,4 @@
+apiVersion: v1
+description: A Helm chart for sales events
+name: sales-events
+version: 0.1.0
